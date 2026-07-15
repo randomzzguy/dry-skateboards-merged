@@ -50,7 +50,6 @@ function scrollTo(target: string) {
 export default function DrySkateboards() {
   const [loaderVisible, setLoaderVisible] = useState(true)
   const [loaderLeaving, setLoaderLeaving] = useState(false)
-  const [loaderProgress, setLoaderProgress] = useState(0)
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [progress, setProgress] = useState(0)
@@ -63,27 +62,14 @@ export default function DrySkateboards() {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
     const duration = reducedMotion ? 450 : 2750
     const exitDuration = reducedMotion ? 80 : 900
-    const startedAt = performance.now()
-    let animationFrame = 0
     let exitTimer: ReturnType<typeof setTimeout> | undefined
-
-    const updateLoader = (now: number) => {
-      const nextProgress = Math.min(100, Math.round(((now - startedAt) / duration) * 100))
-      setLoaderProgress(nextProgress)
-
-      if (nextProgress < 100) {
-        animationFrame = requestAnimationFrame(updateLoader)
-        return
-      }
-
+    const completionTimer = setTimeout(() => {
       setLoaderLeaving(true)
       exitTimer = setTimeout(() => setLoaderVisible(false), exitDuration)
-    }
-
-    animationFrame = requestAnimationFrame(updateLoader)
+    }, duration)
 
     return () => {
-      cancelAnimationFrame(animationFrame)
+      clearTimeout(completionTimer)
       if (exitTimer) clearTimeout(exitTimer)
     }
   }, [])
@@ -144,46 +130,14 @@ export default function DrySkateboards() {
   return (
     <main className={`site-shell ${loaderVisible ? "site-shell--loading" : "site-shell--ready"}`}>
       {loaderVisible && (
-        <div className={`loading-screen ${loaderLeaving ? "loading-screen--leaving" : ""}`}>
-          <div className="loading-screen__top">
-            <div className="loading-screen__brand">DRY<span>®</span></div>
-            <p><span>Emirati-owned</span><span>Abu Dhabi / UAE</span></p>
-            <p className="loading-screen__coordinates"><span>24°28&apos;N</span><span>54°22&apos;E</span></p>
-          </div>
-
-          <div className="loading-screen__stage" aria-hidden="true">
-            <div className="loading-screen__video">
-              <video autoPlay muted loop playsInline preload="auto">
-                <source src="/assets/loading.mp4" type="video/mp4" />
-              </video>
-              <span>Campaign film / Heat study 001</span>
-            </div>
-            <div className="loading-screen__stamp">
-              <small>Born in</small>
-              <strong>THE<br />HEAT</strong>
-              <i>EST. 2024</i>
-            </div>
-            <div className="loading-screen__orbit"><span>DRY</span></div>
-          </div>
-
-          <div className="loading-screen__bottom">
-            <div
-              className="loading-screen__count"
-              role="progressbar"
-              aria-label="Loading website"
-              aria-valuemin={0}
-              aria-valuemax={100}
-              aria-valuenow={loaderProgress}
-            >
-              <strong>{String(loaderProgress).padStart(3, "0")}</strong><span>%</span>
-            </div>
-            <div className="loading-screen__status">
-              <div><span>Preparing the drop</span><span>Y2026</span></div>
-              <div className="loading-screen__track"><i style={{ transform: `scaleX(${loaderProgress / 100})` }} /></div>
-            </div>
-          </div>
-
-          <div className="loading-screen__stripe" aria-hidden="true"><i /><i /><i /><i /></div>
+        <div
+          className={`loading-screen loading-screen--minimal ${loaderLeaving ? "loading-screen--leaving" : ""}`}
+          role="status"
+          aria-label="Loading website"
+        >
+          <video className="loading-screen__video-only" autoPlay muted loop playsInline preload="auto" aria-hidden="true">
+            <source src="/assets/loading.mp4" type="video/mp4" />
+          </video>
         </div>
       )}
 
