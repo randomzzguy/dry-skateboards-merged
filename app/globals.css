@@ -67,6 +67,268 @@ img {
     var(--paper);
 }
 
+.site-shell--loading .hero__outline,
+.site-shell--loading .hero__poster--main,
+.site-shell--loading .hero__stamp,
+.site-shell--loading .hero__intro,
+.site-shell--loading .hero__cta {
+  animation-play-state: paused;
+}
+
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  padding: 2rem 3vw 1.6rem;
+  display: grid;
+  grid-template-rows: auto 1fr auto auto;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 72% 32%, rgba(239, 90, 25, 0.16), transparent 28rem),
+    var(--paper);
+  overflow: hidden;
+  clip-path: inset(0);
+  transition: clip-path 900ms cubic-bezier(.76, 0, .24, 1), transform 900ms cubic-bezier(.76, 0, .24, 1);
+}
+
+.loading-screen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, transparent calc(50% - .5px), rgba(17, 16, 14, 0.09) 50%, transparent calc(50% + .5px)),
+    linear-gradient(rgba(17, 16, 14, 0.035) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 68px;
+}
+
+.loading-screen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  opacity: 0.15;
+  pointer-events: none;
+  background-image:
+    repeating-radial-gradient(circle at 17% 32%, transparent 0, rgba(17, 16, 14, 0.09) 0.45px, transparent 0.9px, transparent 4px),
+    repeating-linear-gradient(93deg, transparent 0 5px, rgba(17, 16, 14, 0.022) 6px, transparent 7px 11px);
+  mix-blend-mode: multiply;
+}
+
+.loading-screen--leaving {
+  clip-path: inset(0 0 100% 0);
+  transform: translateY(-2.5%);
+  pointer-events: none;
+}
+
+.loading-screen__top,
+.loading-screen__stage,
+.loading-screen__bottom,
+.loading-screen__stripe {
+  position: relative;
+  z-index: 2;
+}
+
+.loading-screen__top {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: start;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--ink);
+}
+
+.loading-screen__brand {
+  font: 400 2.8rem/.8 var(--display);
+  letter-spacing: -0.08em;
+}
+
+.loading-screen__brand span {
+  margin-left: 0.2rem;
+  color: var(--red);
+  font: 800 0.55rem/1 Arial, sans-serif;
+  vertical-align: top;
+}
+
+.loading-screen__top p {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 0.56rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+}
+
+.loading-screen__top .loading-screen__coordinates {
+  justify-self: end;
+  text-align: right;
+}
+
+.loading-screen__stage {
+  min-height: 0;
+  display: grid;
+  place-items: center;
+}
+
+.loading-screen__video {
+  position: relative;
+  width: min(46vw, 690px);
+  aspect-ratio: 1.5;
+  overflow: hidden;
+  border: 8px solid var(--paper);
+  outline: 1px solid var(--ink);
+  box-shadow: 20px 22px 0 var(--red);
+  transform: rotate(-1.8deg);
+  animation: loader-video-in 700ms 100ms cubic-bezier(.16, .8, .25, 1) both;
+}
+
+.loading-screen__video video {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  filter: contrast(1.05) saturate(0.94);
+}
+
+.loading-screen__video > span {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  padding: 0.7rem 0.85rem;
+  color: var(--paper);
+  background: var(--ink);
+  text-transform: uppercase;
+  font-size: 0.53rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+}
+
+.loading-screen__stamp {
+  position: absolute;
+  left: 13%;
+  top: 18%;
+  width: 145px;
+  height: 145px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: var(--paper);
+  background: var(--red);
+  box-shadow: 7px 7px 0 var(--orange);
+  transform: rotate(-8deg);
+  animation: loader-stamp-in 650ms 320ms cubic-bezier(.16, .8, .25, 1) both, loader-stamp-float 3s 1s ease-in-out infinite;
+}
+
+.loading-screen__stamp small,
+.loading-screen__stamp i {
+  text-transform: uppercase;
+  font-size: 0.48rem;
+  font-weight: 900;
+  font-style: normal;
+  letter-spacing: 0.17em;
+}
+
+.loading-screen__stamp strong {
+  font: 400 2.15rem/.8 var(--display);
+}
+
+.loading-screen__orbit {
+  position: absolute;
+  right: 14%;
+  bottom: 17%;
+  width: 96px;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--paper);
+  background: var(--orange);
+  animation: sun-spin 12s linear infinite, loader-orbit-in 600ms 480ms both;
+}
+
+.loading-screen__orbit::before {
+  content: "DRY • ABU DHABI • BORN IN HEAT •";
+  position: absolute;
+  inset: -9px;
+  display: grid;
+  place-items: center;
+  border: 1px dashed var(--ink);
+  border-radius: 50%;
+  color: transparent;
+}
+
+.loading-screen__orbit span {
+  font: 400 1.2rem/1 var(--display);
+}
+
+.loading-screen__bottom {
+  display: grid;
+  grid-template-columns: minmax(260px, .65fr) 1fr;
+  gap: 4vw;
+  align-items: end;
+  padding-bottom: 1rem;
+}
+
+.loading-screen__count {
+  display: flex;
+  align-items: flex-end;
+  line-height: .7;
+}
+
+.loading-screen__count strong {
+  font: 400 clamp(6rem, 12vw, 12rem)/.64 var(--display);
+  letter-spacing: -0.07em;
+  font-variant-numeric: tabular-nums;
+}
+
+.loading-screen__count > span {
+  margin: 0 0 0.3rem 0.5rem;
+  color: var(--red);
+  font: 400 2rem/1 var(--display);
+}
+
+.loading-screen__status {
+  padding-bottom: 0.2rem;
+}
+
+.loading-screen__status > div:first-child {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  font-size: 0.56rem;
+  font-weight: 900;
+  letter-spacing: 0.17em;
+}
+
+.loading-screen__track {
+  height: 7px;
+  border: 1px solid var(--ink);
+  background: transparent;
+}
+
+.loading-screen__track i {
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: linear-gradient(90deg, var(--red), var(--orange));
+  transform-origin: left;
+}
+
+.loading-screen__stripe {
+  height: 7px;
+  display: grid;
+  grid-template-columns: 2fr 3fr 2fr 1fr;
+}
+
+.loading-screen__stripe i:nth-child(1) { background: var(--charcoal); }
+.loading-screen__stripe i:nth-child(2) { background: var(--red); }
+.loading-screen__stripe i:nth-child(3) { background: var(--orange); }
+.loading-screen__stripe i:nth-child(4) { background: var(--paper-deep); }
+
 .paper-grain {
   position: fixed;
   inset: 0;
@@ -1412,6 +1674,26 @@ img {
   transform: none;
 }
 
+@keyframes loader-video-in {
+  from { opacity: 0; clip-path: inset(100% 0 0 0); transform: translateY(35px) rotate(2deg); }
+  to { opacity: 1; clip-path: inset(0); transform: rotate(-1.8deg); }
+}
+
+@keyframes loader-stamp-in {
+  from { opacity: 0; transform: scale(0.5) rotate(-22deg); }
+  to { opacity: 1; transform: scale(1) rotate(-8deg); }
+}
+
+@keyframes loader-stamp-float {
+  0%, 100% { transform: translateY(0) rotate(-8deg); }
+  50% { transform: translateY(-8px) rotate(-4deg); }
+}
+
+@keyframes loader-orbit-in {
+  from { opacity: 0; scale: 0.5; }
+  to { opacity: 1; scale: 1; }
+}
+
 @keyframes title-in {
   from { opacity: 0; transform: translateY(38%) skewY(3deg); letter-spacing: -0.15em; }
   to { opacity: 1; transform: none; }
@@ -1488,6 +1770,56 @@ img {
   .nav__links, .bag-button { display: none; }
   .menu-button { display: block; justify-self: end; }
   .wordmark { font-size: 2.15rem; }
+
+  .loading-screen {
+    min-height: 100svh;
+    padding: 1.25rem 5vw 1rem;
+  }
+
+  .loading-screen::before { background-size: 100% 100%, 100% 54px; }
+  .loading-screen__top { grid-template-columns: 1fr 1fr; }
+  .loading-screen__brand { font-size: 2.25rem; }
+  .loading-screen__top > p:not(.loading-screen__coordinates) { display: none; }
+  .loading-screen__coordinates { font-size: 0.46rem !important; }
+
+  .loading-screen__video {
+    width: 76vw;
+    max-width: 480px;
+    border-width: 5px;
+    box-shadow: 12px 14px 0 var(--red);
+  }
+
+  .loading-screen__stamp {
+    left: 1%;
+    top: 14%;
+    width: 100px;
+    height: 100px;
+    padding: 0.7rem;
+    box-shadow: 5px 5px 0 var(--orange);
+  }
+
+  .loading-screen__stamp strong { font-size: 1.5rem; }
+  .loading-screen__stamp small,
+  .loading-screen__stamp i { font-size: 0.37rem; }
+
+  .loading-screen__orbit {
+    right: 1%;
+    bottom: 13%;
+    width: 70px;
+  }
+
+  .loading-screen__orbit span { font-size: 0.9rem; }
+
+  .loading-screen__bottom {
+    grid-template-columns: 1fr;
+    gap: 1.1rem;
+    padding-bottom: 0.8rem;
+  }
+
+  .loading-screen__count strong { font-size: clamp(5.2rem, 26vw, 8rem); }
+  .loading-screen__count > span { font-size: 1.5rem; }
+
+  .loading-screen__status > div:first-child { font-size: 0.5rem; }
 
   .hero {
     height: 100svh;
