@@ -1,6 +1,6 @@
 "use client"
 
-import { FormEvent, useEffect, useRef, useState } from "react"
+import { CSSProperties, FormEvent, useEffect, useRef, useState } from "react"
 
 const navItems = [
   { label: "Drop", target: "drop" },
@@ -63,7 +63,7 @@ export default function DrySkateboards() {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
     const duration = reducedMotion ? 450 : 4700
     const holdDuration = reducedMotion ? 0 : 420
-    const exitDuration = reducedMotion ? 80 : 950
+    const exitDuration = reducedMotion ? 80 : 1050
     const startedAt = performance.now()
     let animationFrame = 0
     let holdTimer: ReturnType<typeof setTimeout> | undefined
@@ -149,12 +149,13 @@ export default function DrySkateboards() {
   }
 
   return (
-    <main className={`site-shell ${loaderVisible ? "site-shell--loading" : "site-shell--ready"}`}>
+    <main className={`site-shell ${loaderVisible && !loaderLeaving ? "site-shell--loading" : "site-shell--ready"}`}>
       {loaderVisible && (
         <div
           className={`loading-screen loading-screen--minimal ${loaderLeaving ? "loading-screen--leaving" : ""}`}
           role="status"
           aria-label="Loading website"
+          style={{ "--loader-progress": `${loaderProgress}%` } as CSSProperties}
         >
           <div className="loading-screen__video-wrap" aria-hidden="true">
             <video className="loading-screen__video-only" autoPlay muted loop playsInline preload="auto">
@@ -171,6 +172,7 @@ export default function DrySkateboards() {
           >
             <strong>{String(loaderProgress).padStart(3, "0")}</strong><span>%</span>
           </div>
+          <div className="loading-screen__progress-cut" aria-hidden="true" />
         </div>
       )}
 

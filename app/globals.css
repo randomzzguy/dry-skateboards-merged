@@ -334,125 +334,139 @@ img {
   padding: 0;
   display: grid;
   place-items: center;
-  background: #000;
+  background: transparent;
   isolation: isolate;
-  clip-path: inset(0);
-  transform: scale(1);
-  filter: blur(0);
-  transition:
-    opacity 780ms cubic-bezier(.22, .8, .2, 1),
-    transform 950ms cubic-bezier(.22, .8, .2, 1),
-    filter 780ms ease;
+  clip-path: none;
+  transform: none;
+  transition: none;
 }
 
 .loading-screen--minimal::before,
 .loading-screen--minimal::after {
-  display: none;
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  z-index: 0;
+  width: 50.5%;
+  display: block;
+  background: #000;
+  opacity: 1;
+  mix-blend-mode: normal;
+  pointer-events: none;
+  transform: translateX(0);
+  transition: transform 980ms cubic-bezier(.76, 0, .24, 1);
+}
+
+.loading-screen--minimal::before {
+  left: 0;
+}
+
+.loading-screen--minimal::after {
+  right: 0;
 }
 
 .loading-screen__video-wrap {
   position: relative;
-  width: min(76vw, 980px);
+  z-index: 2;
+  width: min(92vw, 1180px);
   max-width: 100%;
-  max-height: 84vh;
+  max-height: 88vh;
   display: grid;
   place-items: center;
-  will-change: transform, opacity, filter;
-  animation:
-    loading-video-stage-in 1050ms cubic-bezier(.16, .8, .25, 1) both,
-    loading-video-breathe 3.2s 1050ms ease-in-out infinite;
-}
-
-.loading-screen__video-wrap::before {
-  content: "";
-  position: absolute;
-  inset: 12% 7%;
-  z-index: -1;
-  border-radius: 50%;
-  background: rgba(217, 43, 18, 0.22);
-  filter: blur(58px);
-  opacity: 0;
-  animation: loading-video-glow 2.8s 700ms ease-in-out infinite;
-}
-
-.loading-screen__video-wrap::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background: linear-gradient(105deg, transparent 36%, rgba(255, 255, 255, 0.11) 49%, transparent 62%);
-  mix-blend-mode: screen;
-  transform: translateX(-130%);
-  animation: loading-video-sweep 2.6s 850ms cubic-bezier(.45, 0, .25, 1) infinite;
+  overflow: hidden;
+  clip-path: inset(0 50%);
+  will-change: clip-path, transform, opacity;
+  animation: loading-poster-cut-in 900ms 100ms cubic-bezier(.76, 0, .24, 1) forwards;
 }
 
 .loading-screen__video-only {
   width: 100%;
-  max-height: 84vh;
+  max-height: 88vh;
   display: block;
   object-fit: contain;
-  filter: contrast(1.04) saturate(1.04);
+  filter: contrast(1.08) saturate(1.08);
+  transform: scale(1.08);
+  animation: loading-poster-settle 1.15s 100ms cubic-bezier(.16, .8, .25, 1) forwards;
 }
 
 .loading-screen__minimal-progress {
   position: absolute;
-  right: 3vw;
-  bottom: 2rem;
-  z-index: 2;
+  left: 3vw;
+  bottom: clamp(2rem, 4vh, 3.5rem);
+  z-index: 3;
   display: flex;
   align-items: flex-end;
   color: #fff;
-  line-height: 0.75;
+  line-height: 0.64;
   font-variant-numeric: tabular-nums;
-  text-shadow: 0 0 24px rgba(255, 255, 255, 0.15);
-  will-change: transform, opacity, filter;
-  animation:
-    loading-progress-in 720ms 260ms cubic-bezier(.16, .8, .25, 1) both,
-    loading-progress-float 2.6s 980ms ease-in-out infinite;
+  mix-blend-mode: difference;
+  will-change: transform, opacity;
+  animation: loading-counter-cut-in 720ms 420ms cubic-bezier(.16, .8, .25, 1) both;
 }
 
 .loading-screen__minimal-progress strong {
-  font: 400 clamp(3.8rem, 7vw, 7.5rem)/0.72 var(--display);
-  letter-spacing: -0.06em;
+  min-width: 2.35em;
+  font: 400 clamp(6rem, 13vw, 13rem)/0.64 var(--display);
+  letter-spacing: -0.075em;
 }
 
 .loading-screen__minimal-progress span {
-  margin: 0 0 0.22rem 0.35rem;
-  color: var(--red);
-  font: 400 1.35rem/1 var(--display);
+  margin: 0 0 0.15rem 0.7rem;
+  color: #fff;
+  font: 400 clamp(1.25rem, 2vw, 2rem)/1 var(--display);
+}
+
+.loading-screen__progress-cut {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 4;
+  width: var(--loader-progress, 0%);
+  height: 8px;
+  background: var(--red);
+  box-shadow: 0 -1px 0 rgba(255, 255, 255, .22);
+  transition: width 90ms linear;
 }
 
 .loading-screen--minimal.loading-screen--leaving {
-  clip-path: inset(0);
-  opacity: 0;
-  transform: scale(1.035);
-  filter: blur(9px);
+  clip-path: none;
+  transform: none;
   pointer-events: none;
 }
 
+.loading-screen--minimal.loading-screen--leaving::before {
+  transform: translateX(-100%);
+}
+
+.loading-screen--minimal.loading-screen--leaving::after {
+  transform: translateX(100%);
+}
+
 .loading-screen--leaving .loading-screen__video-wrap {
+  animation: none;
   opacity: 0;
-  transform: scale(1.09);
-  filter: brightness(1.25);
+  clip-path: inset(0 50%);
+  transform: scale(.96);
   transition:
-    opacity 620ms ease,
-    transform 900ms cubic-bezier(.22, .8, .2, 1),
-    filter 620ms ease;
+    opacity 240ms ease,
+    clip-path 520ms cubic-bezier(.76, 0, .24, 1),
+    transform 520ms cubic-bezier(.76, 0, .24, 1);
 }
 
 .loading-screen--leaving .loading-screen__minimal-progress {
+  animation: none;
   opacity: 0;
-  transform: translateY(18px) scale(.96);
-  filter: blur(5px);
-  transition:
-    opacity 420ms ease,
-    transform 620ms cubic-bezier(.22, .8, .2, 1),
-    filter 420ms ease;
+  transform: translateX(-24px);
+  transition: opacity 220ms ease, transform 340ms ease;
+}
+
+.loading-screen--leaving .loading-screen__progress-cut {
+  opacity: 0;
+  transition: opacity 180ms ease;
 }
 
 .site-shell--ready .hero {
-  animation: site-arrival 1050ms cubic-bezier(.16, .8, .25, 1) both;
+  animation: site-arrival 1150ms cubic-bezier(.16, .8, .25, 1) both;
 }
 
 .site-shell--ready .nav {
@@ -1804,41 +1818,24 @@ img {
   transform: none;
 }
 
-@keyframes loading-video-stage-in {
-  from { opacity: 0; transform: scale(.92); filter: blur(18px) brightness(.55); }
-  58% { opacity: 1; filter: blur(0) brightness(1.12); }
-  to { opacity: 1; transform: scale(1); filter: blur(0) brightness(1); }
+@keyframes loading-poster-cut-in {
+  from { clip-path: inset(0 50%); transform: scaleY(.92); }
+  to { clip-path: inset(0); transform: scaleY(1); }
 }
 
-@keyframes loading-video-breathe {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.018); }
+@keyframes loading-poster-settle {
+  from { transform: scale(1.08); }
+  to { transform: scale(1); }
 }
 
-@keyframes loading-video-glow {
-  0%, 100% { opacity: .18; transform: scale(.92); }
-  50% { opacity: .48; transform: scale(1.08); }
-}
-
-@keyframes loading-video-sweep {
-  0%, 18% { opacity: 0; transform: translateX(-130%); }
-  38% { opacity: 1; }
-  66%, 100% { opacity: 0; transform: translateX(130%); }
-}
-
-@keyframes loading-progress-in {
-  from { opacity: 0; transform: translateY(22px); filter: blur(8px); }
-  to { opacity: 1; transform: none; filter: blur(0); }
-}
-
-@keyframes loading-progress-float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
+@keyframes loading-counter-cut-in {
+  from { opacity: 0; transform: translateX(-32px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
 @keyframes site-arrival {
-  from { opacity: .25; transform: scale(1.035); filter: blur(12px); }
-  to { opacity: 1; transform: scale(1); filter: blur(0); }
+  from { opacity: .2; transform: scale(1.025); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 @keyframes site-nav-arrival {
@@ -1949,11 +1946,12 @@ img {
   }
 
   .loading-screen--minimal { padding: 0; }
-  .loading-screen__video-wrap { width: 90vw; max-height: 80vh; }
-  .loading-screen__video-only { max-height: 80vh; }
-  .loading-screen__minimal-progress { right: 5vw; bottom: 1.35rem; }
-  .loading-screen__minimal-progress strong { font-size: clamp(3.3rem, 17vw, 5.5rem); }
-  .loading-screen__minimal-progress span { font-size: 1rem; }
+  .loading-screen__video-wrap { width: 118vw; max-width: none; max-height: 82vh; }
+  .loading-screen__video-only { max-height: 82vh; }
+  .loading-screen__minimal-progress { left: 5vw; bottom: 1.8rem; }
+  .loading-screen__minimal-progress strong { font-size: clamp(5.5rem, 29vw, 8.5rem); }
+  .loading-screen__minimal-progress span { margin-left: .4rem; font-size: 1rem; }
+  .loading-screen__progress-cut { height: 6px; }
 
   .loading-screen::before { background-size: 100% 100%, 100% 54px; }
   .loading-screen__top { grid-template-columns: 1fr 1fr; }
