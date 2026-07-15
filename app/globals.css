@@ -351,6 +351,29 @@ img {
   animation: loading-video-only-in 600ms ease both;
 }
 
+.loading-screen__minimal-progress {
+  position: absolute;
+  right: 3vw;
+  bottom: 2rem;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  color: #fff;
+  line-height: 0.75;
+  font-variant-numeric: tabular-nums;
+}
+
+.loading-screen__minimal-progress strong {
+  font: 400 clamp(3.8rem, 7vw, 7.5rem)/0.72 var(--display);
+  letter-spacing: -0.06em;
+}
+
+.loading-screen__minimal-progress span {
+  margin: 0 0 0.22rem 0.35rem;
+  color: var(--red);
+  font: 400 1.35rem/1 var(--display);
+}
+
 .paper-grain {
   position: fixed;
   inset: 0;
@@ -1805,6 +1828,9 @@ img {
 
   .loading-screen--minimal { padding: 0; }
   .loading-screen__video-only { width: 90vw; max-height: 80vh; }
+  .loading-screen__minimal-progress { right: 5vw; bottom: 1.35rem; }
+  .loading-screen__minimal-progress strong { font-size: clamp(3.3rem, 17vw, 5.5rem); }
+  .loading-screen__minimal-progress span { font-size: 1rem; }
 
   .loading-screen::before { background-size: 100% 100%, 100% 54px; }
   .loading-screen__top { grid-template-columns: 1fr 1fr; }

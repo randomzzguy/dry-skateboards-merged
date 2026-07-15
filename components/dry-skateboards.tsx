@@ -50,6 +50,7 @@ function scrollTo(target: string) {
 export default function DrySkateboards() {
   const [loaderVisible, setLoaderVisible] = useState(true)
   const [loaderLeaving, setLoaderLeaving] = useState(false)
+  const [loaderProgress, setLoaderProgress] = useState(0)
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [progress, setProgress] = useState(0)
@@ -60,16 +61,34 @@ export default function DrySkateboards() {
 
   useEffect(() => {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    const duration = reducedMotion ? 450 : 2750
+    const duration = reducedMotion ? 450 : 4200
+    const holdDuration = reducedMotion ? 0 : 300
     const exitDuration = reducedMotion ? 80 : 900
+    const startedAt = performance.now()
+    let animationFrame = 0
+    let holdTimer: ReturnType<typeof setTimeout> | undefined
     let exitTimer: ReturnType<typeof setTimeout> | undefined
-    const completionTimer = setTimeout(() => {
-      setLoaderLeaving(true)
-      exitTimer = setTimeout(() => setLoaderVisible(false), exitDuration)
-    }, duration)
+
+    const updateLoader = (now: number) => {
+      const nextProgress = Math.min(100, Math.round(((now - startedAt) / duration) * 100))
+      setLoaderProgress(nextProgress)
+
+      if (nextProgress < 100) {
+        animationFrame = requestAnimationFrame(updateLoader)
+        return
+      }
+
+      holdTimer = setTimeout(() => {
+        setLoaderLeaving(true)
+        exitTimer = setTimeout(() => setLoaderVisible(false), exitDuration)
+      }, holdDuration)
+    }
+
+    animationFrame = requestAnimationFrame(updateLoader)
 
     return () => {
-      clearTimeout(completionTimer)
+      cancelAnimationFrame(animationFrame)
+      if (holdTimer) clearTimeout(holdTimer)
       if (exitTimer) clearTimeout(exitTimer)
     }
   }, [])
@@ -136,8 +155,18 @@ export default function DrySkateboards() {
           aria-label="Loading website"
         >
           <video className="loading-screen__video-only" autoPlay muted loop playsInline preload="auto" aria-hidden="true">
-            <source src="/assets/loading.mp4" type="video/mp4" />
+            <source src="/assets/loadingNEW.mp4" type="video/mp4" />
           </video>
+          <div
+            className="loading-screen__minimal-progress"
+            role="progressbar"
+            aria-label="Loading website"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={loaderProgress}
+          >
+            <strong>{String(loaderProgress).padStart(3, "0")}</strong><span>%</span>
+          </div>
         </div>
       )}
 
