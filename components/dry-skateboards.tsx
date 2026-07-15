@@ -61,16 +61,18 @@ export default function DrySkateboards() {
 
   useEffect(() => {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    const duration = reducedMotion ? 450 : 4200
-    const holdDuration = reducedMotion ? 0 : 300
-    const exitDuration = reducedMotion ? 80 : 900
+    const duration = reducedMotion ? 450 : 4700
+    const holdDuration = reducedMotion ? 0 : 420
+    const exitDuration = reducedMotion ? 80 : 950
     const startedAt = performance.now()
     let animationFrame = 0
     let holdTimer: ReturnType<typeof setTimeout> | undefined
     let exitTimer: ReturnType<typeof setTimeout> | undefined
 
     const updateLoader = (now: number) => {
-      const nextProgress = Math.min(100, Math.round(((now - startedAt) / duration) * 100))
+      const elapsed = Math.min(1, (now - startedAt) / duration)
+      const easedProgress = elapsed * elapsed * (3 - 2 * elapsed)
+      const nextProgress = Math.min(100, Math.round(easedProgress * 100))
       setLoaderProgress(nextProgress)
 
       if (nextProgress < 100) {
@@ -154,9 +156,11 @@ export default function DrySkateboards() {
           role="status"
           aria-label="Loading website"
         >
-          <video className="loading-screen__video-only" autoPlay muted loop playsInline preload="auto" aria-hidden="true">
-            <source src="/assets/loadingNEW.mp4" type="video/mp4" />
-          </video>
+          <div className="loading-screen__video-wrap" aria-hidden="true">
+            <video className="loading-screen__video-only" autoPlay muted loop playsInline preload="auto">
+              <source src="/assets/loadingNEW.mp4" type="video/mp4" />
+            </video>
+          </div>
           <div
             className="loading-screen__minimal-progress"
             role="progressbar"
