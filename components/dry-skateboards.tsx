@@ -152,15 +152,19 @@ export default function DrySkateboards() {
     <main className={`site-shell ${loaderVisible && !loaderLeaving ? "site-shell--loading" : "site-shell--ready"}`}>
       {loaderVisible && (
         <div
-          className={`loading-screen loading-screen--minimal ${loaderLeaving ? "loading-screen--leaving" : ""}`}
+          className={`loading-screen loading-screen--prelude ${loaderLeaving ? "loading-screen--leaving" : ""}`}
           role="status"
           aria-label="Loading website"
           style={{ "--loader-progress": `${loaderProgress}%` } as CSSProperties}
         >
-          <div className="loading-screen__video-wrap" aria-hidden="true">
-            <video className="loading-screen__video-only" autoPlay muted loop playsInline preload="auto">
-              <source src="/assets/loadingNEW.mp4" type="video/mp4" />
-            </video>
+          <div className="loading-screen__ambient" aria-hidden="true" />
+          <div className="loading-screen__frame" aria-hidden="true">
+            <div className="loading-screen__video-wrap">
+              <video className="loading-screen__video-only" autoPlay muted loop playsInline preload="auto">
+                <source src="/assets/loadingNEW.mp4" type="video/mp4" />
+              </video>
+            </div>
+            <div className="loading-screen__scanner" />
           </div>
           <div
             className="loading-screen__minimal-progress"
@@ -172,7 +176,10 @@ export default function DrySkateboards() {
           >
             <strong>{String(loaderProgress).padStart(3, "0")}</strong><span>%</span>
           </div>
-          <div className="loading-screen__progress-cut" aria-hidden="true" />
+          <div className="loading-screen__progress-cut" aria-hidden="true">
+            <i />
+          </div>
+          <div className="loading-screen__exit-flash" aria-hidden="true" />
         </div>
       )}
 
